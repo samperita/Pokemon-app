@@ -1,0 +1,295 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pokemon-app-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  pokemon-app-dashboard.json: |
+    {
+        "annotations": {
+            "list": [
+                {
+                    "builtIn": 1,
+                    "datasource": "Prometheus",
+                    "enable": true,
+                    "hide": true,
+                    "iconColor": "rgba(0, 211, 255, 1)",
+                    "name": "Annotations & Alerts",
+                    "type": "dashboard"
+                }
+            ]
+        },
+        "editable": true,
+        "gnetId": null,
+        "graphTooltip": 0,
+        "id": null,
+        "panels": [
+            {
+                "type": "logs",
+                "title": "Loki Logs: Pokemon App",
+                "targets": [
+                    {
+                    "expr": "{job=\"app\"}",
+                    "refId": "B",
+                    "datasource": "Loki"
+                    }
+                ],
+                "gridPos": { "h": 10, "w": 24, "x": 0, "y": 0 }
+            },
+            {
+                "type": "gauge",
+                "title": "Uso de CPU - Contenedor PHP",
+                "targets": [
+                    {
+                        "expr": "sum(rate(container_cpu_usage_seconds_total{container=\"php\"}[1m])) * 100",
+                        "legendFormat": "Uso CPU PHP (%)",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "percent",
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                { "color": "green", "value": 0 },
+                                { "color": "yellow", "value": 50 },
+                                { "color": "red", "value": 80 }
+                            ]
+                        }
+                    }
+                }
+            },
+            {
+                "type": "gauge",
+                "title": "Uso de CPU - Contenedor Nginx",
+                "targets": [
+                    {
+                        "expr": "sum(rate(container_cpu_usage_seconds_total{container=\"nginx\"}[1m])) * 100",
+                        "legendFormat": "Uso CPU Nginx (%)",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "percent",
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                { "color": "green", "value": 0 },
+                                { "color": "yellow", "value": 50 },
+                                { "color": "red", "value": 80 }
+                            ]
+                        }
+                    }
+                }
+            },
+            {
+                "type": "stat",
+                "title": "Uso de Memoria - Contenedor PHP",
+                "targets": [
+                    {
+                        "expr": "container_memory_usage_bytes{container=\"php\"}",
+                        "legendFormat": "Memoria PHP",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": { "h": 6, "w": 6, "x": 0, "y": 6 },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "bytes"
+                    }
+                }
+            },
+            {
+                "type": "stat",
+                "title": "Uso de Memoria - Contenedor Nginx",
+                "targets": [
+                    {
+                        "expr": "container_memory_usage_bytes{container=\"nginx\"}",
+                        "legendFormat": "Memoria Nginx",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": { "h": 6, "w": 6, "x": 6, "y": 6 },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "bytes"
+                    }
+                }
+            },
+            {
+                "type": "graph",
+                "title": "Latencia de Solicitudes",
+                "targets": [
+                    {
+                        "expr": "php_request_latency_seconds",
+                        "legendFormat": "Latencia Promedio",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": { "h": 8, "w": 12, "x": 12, "y": 18 },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "seconds",
+                        "decimals": 4
+                    }
+                }
+            },
+            {
+                "type": "gauge",
+                "title": "Conexiones por Estado (Leyendo, Escribiendo, Esperando)",
+                "targets": [
+                    {
+                        "expr": "nginx_reading_connections",
+                        "legendFormat": "Leyendo",
+                        "refId": "A"
+                    },
+                    {
+                        "expr": "nginx_writing_connections",
+                        "legendFormat": "Escribiendo",
+                        "refId": "B"
+                    },
+                    {
+                        "expr": "nginx_waiting_connections",
+                        "legendFormat": "Esperando",
+                        "refId": "C"
+                    }
+                ],
+                "gridPos": { "h": 6, "w": 12, "x": 0, "y": 40 },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "short",
+                        "min": 0,
+                        "decimals": 0,
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                { "color": "green", "value": 0 },
+                                { "color": "yellow", "value": 10 },
+                                { "color": "red", "value": 50 }
+                            ]
+                        }
+                    }
+                },
+                "options": {
+                    "reduceOptions": {
+                        "calcs": ["lastNotNull"]
+                    },
+                    "showThresholdMarkers": true,
+                    "showThresholdLabels": true
+                }
+            },
+            {
+                "type": "graph",
+                "title": "Solicitudes en Cola",
+                "targets": [
+                    {
+                        "expr": "php_fpm_listen_queue",
+                        "legendFormat": "Solicitudes en Cola",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": { "h": 8, "w": 12, "x": 12, "y": 18 },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "short",
+                        "decimals": 0
+                    }
+                }
+            },
+            {
+                "type": "graph",
+                "title": "Conexiones Activas (NGINX)",
+                "targets": [
+                    {
+                        "expr": "nginx_active_connections",
+                        "legendFormat": "Conexiones Activas",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": { "h": 8, "w": 12, "x": 12, "y": 18 },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "short"
+                    }
+                }
+            },
+           {
+                "type": "graph",
+                "title": "Procesos Activos de PHP-FPM",
+                "targets": [
+                    {
+                        "expr": "php_fpm_active_processes",
+                        "legendFormat": "Procesos Activos",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": { "h": 6, "w": 6, "x": 6, "y": 6 },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "short"
+                    }
+                }
+            },
+            {
+                "type": "graph",
+                "title": "Procesos Inactivos de PHP-FPM",
+                "targets": [
+                    {
+                        "expr": "php_fpm_idle_processes",
+                        "legendFormat": "Procesos Inactivos",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": { "h": 6, "w": 6, "x": 0, "y": 6 },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "short"
+                    }
+                }
+            },
+            {
+                "type": "stat",
+                "title": "Reinicios de Contenedores x hora",
+                "targets": [
+                    {
+                        "expr": "rate(container_restart_count{name=~\"nginx|php\"}[1h]) or vector(0)",
+                        "legendFormat": "Reinicios por hora",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": { "h": 4, "w": 6, "x": 0, "y": 18 },
+                "options": {
+                "reduceOptions": {
+                    "calcs": ["lastNotNull"],
+                    "fields": ""
+                },
+                "orientation": "auto",
+                "showThresholdMarkers": true,
+                "showThresholdLabels": true
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "unit": "short",
+                        "decimals": 0 
+                    },
+                    "overrides": []
+                }
+            }
+        ],
+        "schemaVersion": 25,
+        "style": "dark",
+        "tags": ["php-fpm", "nginx"],
+        "time": {
+            "from": "now-6h",
+            "to": "now"
+        },
+        "title": "Pokemon App Dashboard",
+        "uid": "pokemon-app-dashboard",
+        "version": 1
+    }

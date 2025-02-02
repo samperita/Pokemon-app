@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: api-pokemon-alert
+  namespace: monitoring
+  labels:
+    resource: prometheus
+spec:
+  route:
+    groupBy: ['severity']
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 1h
+    receiver: "slack"
+  receivers:
+    - name: "slack"
+      slackConfigs:
+        - apiURL: 
+            key: "slack-webhook-url"
+            name: alertmanager-slack-secret
+          channel: "#alerts"
+          sendResolved: true
+          title: '{{ if eq .Status "firing" }} :fire: *ALERT* {{ else }} :white_check_mark: *RESOLVED* {{ end }}'
+          text: |
+            {{- range .Alerts -}}
+            *Alert:* {{ .Labels.alertname }}
+            *Status:* {{ .Status }}
+            *Description:* {{ .Annotations.description }}
+            *Severity:* {{ .Labels.severity }}
+            {{- end -}}

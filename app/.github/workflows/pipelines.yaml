@@ -1,0 +1,35 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push PHP image
+      uses: docker/build-push-action@v4
+      with:
+        context: app/.docker
+        file: app/.docker/Dockerfile
+        push: true
+        tags: samperitar/pokemon-php:latest
+
+    - name: Build and push Nginx image
+      uses: docker/build-push-action@v4
+      with:
+        context: app/.docker/nginx
+        file: app/.docker/nginx/Dockerfile
+        push: true
+        tags: samperitar/pokemon-nginx:latest

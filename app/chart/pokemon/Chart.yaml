@@ -1,0 +1,6 @@
+apiVersion: v2
+name: pokemon
+description: A chart for deploying the Pokemon app
+type: application
+version: 1.0.0
+appVersion: 1.0.0
