@@ -1,0 +1,25 @@
+app:
+  replicas: 1
+  namespace: "pokemon"
+  requests:
+    cpu: "100m"         
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "256Mi"
+  nginx:
+    serviceName: pokemon-svc
+    image: samperitar/pokemon-nginx:latest
+    containerPort: 80
+    workerConnections: 1024
+    port: 80
+    serverName: "_"
+    serviceType: LoadBalancer
+    servicePort: 80
+
+  php:
+    serviceName: pokemon-php
+    image: samperitar/pokemon-php:latest
+    imagePullPolicy: Always
+    containerPort: 9000
+    servicePort: 9000

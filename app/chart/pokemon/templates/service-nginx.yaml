@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app.nginx.serviceName }}
+  namespace: {{ .Values.app.namespace }}
+  labels:
+    app: app
+spec:
+  type: {{ .Values.app.nginx.serviceType }}
+  selector:
+    app: app
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.app.nginx.servicePort }}
+      targetPort: {{ .Values.app.nginx.port }}
