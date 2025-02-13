@@ -64,48 +64,60 @@ Utiliza **Terraform** para provisionar la infraestructura:
 cd terraform/
 terraform init
 terraform apply
+```
 
 # Desplegará un clúster Kubernetes y configurará los recursos necesarios.
-Construcción de Imágenes Docker
-    - Desde el directorio app construye las imágenes Docker para PHP y Nginx con:
-Make images
 
-Pipeline CI/CD
-# El pipeline está configurado en .github/workflows/pipelines.yaml. Al hacer un push a la rama main, las imágenes se construirán y se publicarán automáticamente en Docker Hub.
-
-### Despliega la aplicación 
-# Instalar external secrets (CRDS)
-	helm install external-secrets external-secrets/external-secrets \
-	--namespace external-secrets \
-	--create-namespace \
-	--set installCRDs=true \
-	--wait
-# Instalar kube-prometheus-stack
-	helm install prometheus prometheus-community/kube-prometheus-stack \
-	--namespace monitoring \
-	--create-namespace \
-	--wait
-# Despliega la app, sus dependencias y configuraciones de la monitorización
-	helmfile apply
-# Desplegar con kustomize loki y fluentd
-	kubectl apply -k ./chart/loki
-	kubectl apply -k ./chart/fluentd
-#### Tambien puedes hacer todo con el uso del makefile, usando un simple:
-    make deploy
-
-5. Monitoreo y Observabilidad
-# Accede a Grafana para visualizar métricas haciendo un port forward
-URL: http://<grafana-ip>:3000
-
-#### Para poder obtener datos de la API podremos realizar una petición a la siguiente URL:
-
+## Construcción de Imágenes Docker
+Desde el directorio app construye las imágenes Docker para PHP y Nginx con:
+```bash
+make images
 ```
+
+## Pipeline CI/CD
+El pipeline está configurado en `.github/workflows/pipelines.yaml`. Al hacer un push a la rama `main`, las imágenes se construirán y se publicarán automáticamente en Docker Hub.
+
+### Despliega la aplicación
+
+# Instalar external secrets (CRDS)
+```bash
+helm install external-secrets external-secrets/external-secrets --namespace external-secrets --create-namespace --set installCRDs=true --wait
+```
+
+# Instalar kube-prometheus-stack
+```bash
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace --wait
+```
+
+# Despliega la app, sus dependencias y configuraciones de la monitorización
+```bash
+helmfile apply
+```
+
+# Desplegar con kustomize loki y fluentd
+```bash
+kubectl apply -k ./chart/loki
+kubectl apply -k ./chart/fluentd
+```
+
+## También puedes hacer todo con el uso del Makefile, usando un simple:
+```bash
+make deploy
+```
+
+### 5. Monitoreo y Observabilidad
+# Accede a Grafana para visualizar métricas haciendo un port forward
+```bash
+URL: http://<grafana-ip>:3000
+```
+
+## Para poder obtener datos de la API podremos realizar una petición a la siguiente URL:
+```bash
 http://{server_ip}/charmander
 ```
 
 El resultado de la petición será un JSON con los datos de la API:
-
-```
+```json
 {
     "statusCode": 200,
     "data": {
@@ -115,5 +127,6 @@ El resultado de la petición será un JSON con los datos de la API:
     }
 }
 ```
-Autores
+
+## Autores
 Raquel Samper - Desarrollo, infraestructura y despliegue.
