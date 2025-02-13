@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - 00-fluentd-serviceaccount.yaml
+  - 01-fluentd-clusterrole.yaml
+  - 02-fluentd-clusterrolebinding.yaml
+  - 04-fluentd-config.yaml
+  - 03-fluentd-daemonset.yaml

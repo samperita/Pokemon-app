@@ -1,0 +1,12 @@
+#terraform
+secrets.tfvars
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+terraform/kubeconfig.yaml
+
+#code
+app/code/.env
+app/code/vendor
+app/code/composer.lock

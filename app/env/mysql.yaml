@@ -1,0 +1,36 @@
+mysql:
+  fullnameOverride: "pokemon-mysql"
+  architecture: "standalone"
+  useStatefulSet: true
+  namespace: mysql
+
+auth:
+  username: "patatona"
+  database: "minipokedex"
+
+  existingSecret: "pokemon-secret"
+
+initdbScripts:
+  database.sql: |
+    USE minipokedex;
+
+    CREATE TABLE IF NOT EXISTS pokemon (
+        id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+        name VARCHAR(14) NOT NULL,
+        type VARCHAR(14) NOT NULL,
+        PRIMARY KEY (id)
+    );
+
+    INSERT INTO pokemon (name, type) VALUES
+        ('bulbasaur', 'planta'),
+        ('charmander', 'fuego'),
+        ('squirtle', 'agua');
+
+persistence:
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 250m
+  limits:
+    memory: 512Mi
+    cpu: 500m

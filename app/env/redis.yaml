@@ -1,0 +1,33 @@
+auth:
+  enabled: false
+  
+architecture: standalone
+
+primary:
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  persistence:
+    enabled: true
+    size: 8Gi 
+    storageClass: ""
+
+replica:
+  enabled: false
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClass: ""
+
+metrics:
+  enabled: true
+
+tls:
+  enabled: false
+
+networkPolicy:
+  enabled: true

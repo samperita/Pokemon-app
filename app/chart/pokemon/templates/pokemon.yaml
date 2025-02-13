@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: {{ .Values.app.namespace }}
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - name: nginx
+        image: {{ .Values.app.nginx.image }}
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: {{ .Values.app.requests.cpu }}
+            memory: {{ .Values.app.requests.memory }}
+          limits:
+            cpu: {{ .Values.app.limits.cpu }}
+            memory: {{ .Values.app.limits.memory }}
+      - name: php
+        image: {{ .Values.app.php.image }}
+        ports:
+        - containerPort: 9000
+        resources:
+          requests:
+            cpu: {{ .Values.app.requests.cpu }}
+            memory: {{ .Values.app.requests.memory }}
+          limits:
+            cpu: {{ .Values.app.limits.cpu }}
+            memory: {{ .Values.app.limits.memory }}

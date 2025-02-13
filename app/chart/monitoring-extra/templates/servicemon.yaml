@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: pokemon-app-metrics
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: app
+  namespaceSelector:
+    matchNames:
+      - pokemon
+  endpoints:
+    - interval: 60s
+      path: /metrics_php
+      port: http
+    - interval: 60s
+      path: /metrics_nginx
+      port: http

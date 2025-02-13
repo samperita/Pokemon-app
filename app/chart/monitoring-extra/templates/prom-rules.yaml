@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: api-alerts
+  labels:
+    release: prometheus
+spec:
+  groups:
+  - name: api-alerts
+    rules:
+    - alert: AppDown
+      expr: absent(up{job="pokemon-svc"}) OR up{job="pokemon-svc"} == 0
+      for: 30s
+      labels:
+        severity: critical
+        namespace: monitoring
+      annotations:
+        summary: "App pokemon is down"
+        description: "The application running \"Pokemon\" is not responding. It might be down or unreachable."

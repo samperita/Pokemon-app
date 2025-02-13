@@ -1,0 +1,28 @@
+memcached:
+  architecture: standalone
+  useStatefulSet: true
+
+  fullnameOverride: pokemon-memcached
+  image:
+    repository: bitnami/memcached
+    tag: 1.6.18-debian-11-r0
+
+  replicaCount: 1
+
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 100m
+    limits:
+      memory: 128Mi
+      cpu: 200m
+
+  networkPolicy:
+    enabled: true
+
+  metrics:
+    enabled: true
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9150"
