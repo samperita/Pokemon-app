@@ -27,8 +27,6 @@ releases:
     namespace: external-secrets
     createNamespace: false
     chart: ./chart/external-secrets/extra
-    values:
-      - ./env/external-secrets-extra.yaml
 
   - name: pokemon
     chart: ./chart/pokemon

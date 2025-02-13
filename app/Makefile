@@ -27,12 +27,10 @@ todo: images push-docker
 deploy:
 	helm install external-secrets external-secrets/external-secrets \
 	--namespace external-secrets \
-	--create-namespace \
 	--set installCRDs=true \
 	--wait
 	helm install prometheus prometheus-community/kube-prometheus-stack -f ./env/prometheus.yaml \
 	--namespace monitoring \
-	--create-namespace \
 	--wait
 	helmfile apply
 	kubectl apply -k ./chart/loki

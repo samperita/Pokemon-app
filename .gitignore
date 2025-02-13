@@ -10,6 +10,3 @@ terraform/kubeconfig.yaml
 app/code/.env
 app/code/vendor
 app/code/composer.lock
-
-#charts
-app/env/external-secrets-extra.yaml
